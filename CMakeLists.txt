@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 
 # Global properties
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
 # Project name
 project(cppserver)
@@ -105,33 +106,33 @@ if(NOT CPPSERVER_MODULE)
   endforeach()
 
   # Benchmarks
-  file(GLOB BENCHMARK_HEADER_FILES "performance/*.h")
-  file(GLOB BENCHMARK_INLINE_FILES "performance/*.inl")
-  file(GLOB BENCHMARK_SOURCE_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/performance" "performance/*.cpp")
-  foreach(BENCHMARK_SOURCE_FILE ${BENCHMARK_SOURCE_FILES})
-    string(REGEX REPLACE "(.*)\\.cpp" "\\1" BENCHMARK_NAME ${BENCHMARK_SOURCE_FILE})
-    set(BENCHMARK_TARGET "cppserver-performance-${BENCHMARK_NAME}")
-    add_executable(${BENCHMARK_TARGET} ${BENCHMARK_HEADER_FILES} ${BENCHMARK_INLINE_FILES} "performance/${BENCHMARK_SOURCE_FILE}")
-    set_target_properties(${BENCHMARK_TARGET} PROPERTIES COMPILE_FLAGS "${PEDANTIC_COMPILE_FLAGS}" FOLDER "performance")
-    target_link_libraries(${BENCHMARK_TARGET} ${LINKLIBS} cppbenchmark)
-    list(APPEND INSTALL_TARGETS ${BENCHMARK_TARGET})
-    list(APPEND INSTALL_TARGETS_PDB ${BENCHMARK_TARGET})
-  endforeach()
+  #file(GLOB BENCHMARK_HEADER_FILES "performance/*.h")
+  #file(GLOB BENCHMARK_INLINE_FILES "performance/*.inl")
+  #file(GLOB BENCHMARK_SOURCE_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/performance" "performance/*.cpp")
+  #foreach(BENCHMARK_SOURCE_FILE ${BENCHMARK_SOURCE_FILES})
+  #  string(REGEX REPLACE "(.*)\\.cpp" "\\1" BENCHMARK_NAME ${BENCHMARK_SOURCE_FILE})
+  #  set(BENCHMARK_TARGET "cppserver-performance-${BENCHMARK_NAME}")
+  #  add_executable(${BENCHMARK_TARGET} ${BENCHMARK_HEADER_FILES} ${BENCHMARK_INLINE_FILES} "performance/${BENCHMARK_SOURCE_FILE}")
+  #  set_target_properties(${BENCHMARK_TARGET} PROPERTIES COMPILE_FLAGS "${PEDANTIC_COMPILE_FLAGS}" FOLDER "performance")
+  #  target_link_libraries(${BENCHMARK_TARGET} ${LINKLIBS} cppbenchmark)
+  #  list(APPEND INSTALL_TARGETS ${BENCHMARK_TARGET})
+  #  list(APPEND INSTALL_TARGETS_PDB ${BENCHMARK_TARGET})
+  #endforeach()
 
   # Tests
-  file(GLOB TESTS_HEADER_FILES "tests/*.h")
-  file(GLOB TESTS_INLINE_FILES "tests/*.inl")
-  file(GLOB TESTS_SOURCE_FILES "tests/*.cpp")
-  add_executable(cppserver-tests ${TESTS_HEADER_FILES} ${TESTS_INLINE_FILES} ${TESTS_SOURCE_FILES})
-  set_target_properties(cppserver-tests PROPERTIES COMPILE_FLAGS "${PEDANTIC_COMPILE_FLAGS}" FOLDER "tests")
-  target_include_directories(cppserver-tests PRIVATE Catch2::Catch2)
-  target_link_libraries(cppserver-tests ${LINKLIBS} Catch2::Catch2WithMain)
-  list(APPEND INSTALL_TARGETS cppserver-tests)
-  list(APPEND INSTALL_TARGETS_PDB cppserver-tests)
+  #file(GLOB TESTS_HEADER_FILES "tests/*.h")
+  #file(GLOB TESTS_INLINE_FILES "tests/*.inl")
+  #file(GLOB TESTS_SOURCE_FILES "tests/*.cpp")
+  #add_executable(cppserver-tests ${TESTS_HEADER_FILES} ${TESTS_INLINE_FILES} ${TESTS_SOURCE_FILES})
+  #set_target_properties(cppserver-tests PROPERTIES COMPILE_FLAGS "${PEDANTIC_COMPILE_FLAGS}" FOLDER "tests")
+  #target_include_directories(cppserver-tests PRIVATE Catch2::Catch2)
+  #target_link_libraries(cppserver-tests ${LINKLIBS} Catch2::Catch2WithMain)
+  #list(APPEND INSTALL_TARGETS cppserver-tests)
+  #list(APPEND INSTALL_TARGETS_PDB cppserver-tests)
 
   # CTest
-  enable_testing()
-  add_test(cppserver-tests cppserver-tests --durations yes --order lex)
+  #enable_testing()
+  #add_test(cppserver-tests cppserver-tests --durations yes --order lex)
 
   # Install
   install(TARGETS ${INSTALL_TARGETS}

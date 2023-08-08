@@ -22,7 +22,7 @@
 #if defined(__CYGWIN__)
 
 #include <boost/asio.hpp>
-#include <boost/asio/ssl.hpp>
+// #include <boost/asio/ssl.hpp>
 
 #else
 
@@ -36,7 +36,7 @@
 #endif
 
 #include <asio.hpp>
-#include <asio/ssl.hpp>
+// #include <asio/ssl.hpp>
 
 #if defined(_MSC_VER)
 #pragma warning(pop)

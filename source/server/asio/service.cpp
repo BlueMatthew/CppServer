@@ -223,7 +223,7 @@ void Service::ServiceThread(const std::shared_ptr<Service>& service, const std::
 
 #if (OPENSSL_VERSION_NUMBER >= 0x10100000L)
     // Delete OpenSSL thread state
-    OPENSSL_thread_stop();
+    // OPENSSL_thread_stop();
 #endif
 }
 

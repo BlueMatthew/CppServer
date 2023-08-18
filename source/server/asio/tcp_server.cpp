@@ -11,8 +11,10 @@
 namespace CppServer {
 namespace Asio {
 
+std::atomic_uint32_t TCPServer::_uidFeed(1);
+
 TCPServer::TCPServer(const std::shared_ptr<Service>& service, int port, InternetProtocol protocol)
-    : _id(CppCommon::UUID::Sequential()),
+    : _id(_uidFeed.fetch_add(1)),
       _service(service),
       _io_service(_service->GetAsioService()),
       _strand(*_io_service),
@@ -45,7 +47,7 @@ TCPServer::TCPServer(const std::shared_ptr<Service>& service, int port, Internet
 }
 
 TCPServer::TCPServer(const std::shared_ptr<Service>& service, const std::string& address, int port)
-    : _id(CppCommon::UUID::Sequential()),
+    : _id(_uidFeed.fetch_add(1)),
       _service(service),
       _io_service(_service->GetAsioService()),
       _strand(*_io_service),
@@ -71,7 +73,7 @@ TCPServer::TCPServer(const std::shared_ptr<Service>& service, const std::string&
 }
 
 TCPServer::TCPServer(const std::shared_ptr<Service>& service, const asio::ip::tcp::endpoint& endpoint)
-    : _id(CppCommon::UUID::Sequential()),
+    : _id(_uidFeed.fetch_add(1)),
       _service(service),
       _io_service(_service->GetAsioService()),
       _strand(*_io_service),
@@ -282,7 +284,7 @@ bool TCPServer::DisconnectAll()
     return true;
 }
 
-std::shared_ptr<TCPSession> TCPServer::FindSession(const CppCommon::UUID& id)
+std::shared_ptr<TCPSession> TCPServer::FindSession(uint64_t id)
 {
     std::shared_lock<std::shared_mutex> locker(_sessions_lock);
 
@@ -299,7 +301,7 @@ void TCPServer::RegisterSession()
     _sessions.emplace(_session->id(), _session);
 }
 
-void TCPServer::UnregisterSession(const CppCommon::UUID& id)
+void TCPServer::UnregisterSession(uint64_t id)
 {
     std::unique_lock<std::shared_mutex> locker(_sessions_lock);
 

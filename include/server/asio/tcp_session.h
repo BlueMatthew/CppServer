@@ -11,7 +11,7 @@
 
 #include "service.h"
 
-#include "system/uuid.h"
+#include <atomic>
 
 namespace CppServer {
 namespace Asio {
@@ -42,7 +42,7 @@ public:
     TCPSession& operator=(TCPSession&&) = delete;
 
     //! Get the session Id
-    const CppCommon::UUID& id() const noexcept { return _id; }
+    uint64_t id() const noexcept { return _id; }
 
     //! Get the server
     std::shared_ptr<TCPServer>& server() noexcept { return _server; }
@@ -233,7 +233,7 @@ protected:
 
 private:
     // Session Id
-    CppCommon::UUID _id;
+    uint64_t _id;
     // Server & session
     std::shared_ptr<TCPServer> _server;
     // Asio IO service
@@ -284,6 +284,8 @@ private:
 
     //! Send error notification
     void SendError(std::error_code ec);
+
+	static std::atomic_uint64_t _uidFeed;
 };
 
 } // namespace Asio

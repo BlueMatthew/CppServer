@@ -11,7 +11,7 @@
 
 #include "tcp_session.h"
 
-#include "system/uuid.h"
+#include <atomic>
 
 #include <map>
 #include <mutex>
@@ -60,7 +60,7 @@ public:
     TCPServer& operator=(TCPServer&&) = delete;
 
     //! Get the server Id
-    const CppCommon::UUID& id() const noexcept { return _id; }
+    uint32_t id() const noexcept { return _id; }
 
     //! Get the Asio service
     std::shared_ptr<Service>& service() noexcept { return _service; }
@@ -140,7 +140,7 @@ public:
         \param id - Session Id
         \return Session with a given Id or null if the session it not connected
     */
-    std::shared_ptr<TCPSession> FindSession(const CppCommon::UUID& id);
+    std::shared_ptr<TCPSession> FindSession(uint64_t id);
 
     //! Setup option: keep alive
     /*!
@@ -209,11 +209,11 @@ protected:
 protected:
     // Server sessions
     std::shared_mutex _sessions_lock;
-    std::map<CppCommon::UUID, std::shared_ptr<TCPSession>> _sessions;
+    std::map<uint64_t, std::shared_ptr<TCPSession>> _sessions;
 
 private:
     // Server Id
-    CppCommon::UUID _id;
+    uint32_t _id;
     // Asio service
     std::shared_ptr<Service> _service;
     // Asio IO service
@@ -249,13 +249,15 @@ private:
     /*!
         \param id - Session Id
     */
-    void UnregisterSession(const CppCommon::UUID& id);
+    void UnregisterSession(uint64_t id);
 
     //! Clear multicast buffer
     void ClearBuffers();
 
     //! Send error notification
     void SendError(std::error_code ec);
+
+	static std::atomic_uint32_t _uidFeed;
 };
 
 /*! \example tcp_chat_server.cpp TCP chat server example */

@@ -43,6 +43,7 @@ public:
 
     //! Get the session Id
     uint64_t id() const noexcept { return _id; }
+    std::string remoteAddr() const { return _remote_addr; }
 
     //! Get the server
     std::shared_ptr<TCPServer>& server() noexcept { return _server; }
@@ -244,6 +245,7 @@ private:
     // Session socket
     asio::ip::tcp::socket _socket;
     std::atomic<bool> _connected;
+    std::string _remote_addr;
     // Session statistic
     uint64_t _bytes_pending;
     uint64_t _bytes_sending;

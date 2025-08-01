@@ -9,6 +9,8 @@
 #include "server/asio/service.h"
 
 #include "errors/fatal.h"
+#include <thread>
+#include <chrono>
 
 namespace CppServer {
 namespace Asio {
@@ -96,8 +98,11 @@ bool Service::Start(bool polling)
         _threads[thread] = CppCommon::Thread::Start([this, self, thread]() { ServiceThread(self, _services[thread % _services.size()]); });
 
     // Wait for service is started
-    while (!IsStarted())
-        CppCommon::Thread::Yield();
+	while (!IsStarted())
+	{
+		// std::this_thread::sleep_for(std::chrono::milliseconds(100));
+		CppCommon::Thread::Yield();
+	}
 
     return true;
 }
@@ -190,6 +195,7 @@ void Service::ServiceThread(const std::shared_ptr<Service>& service, const std::
                 {
                     // Run all pending handlers
                     io_service->run();
+					// io_service->reset();
                     break;
                 }
             }

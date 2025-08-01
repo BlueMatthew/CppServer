@@ -11,7 +11,7 @@
 
 #include "tcp_resolver.h"
 
-#include "system/uuid.h"
+#include <atomic>
 #include "time/timespan.h"
 
 #include <mutex>
@@ -57,7 +57,7 @@ public:
     TCPClient& operator=(TCPClient&&) = delete;
 
     //! Get the client Id
-    const CppCommon::UUID& id() const noexcept { return _id; }
+    uint32_t id() const noexcept { return _id; }
 
     //! Get the Asio service
     std::shared_ptr<Service>& service() noexcept { return _service; }
@@ -321,7 +321,7 @@ protected:
 
 private:
     // Client Id
-    CppCommon::UUID _id;
+    uint32_t _id;
     // Asio service
     std::shared_ptr<Service> _service;
     // Asio IO service
@@ -360,6 +360,8 @@ private:
     // Options
     bool _option_keep_alive;
     bool _option_no_delay;
+
+    static std::atomic_uint32_t _uidFeed;
 
     //! Disconnect the client (internal synchronous)
     bool DisconnectInternal();

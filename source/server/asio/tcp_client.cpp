@@ -11,8 +11,10 @@
 namespace CppServer {
 namespace Asio {
 
+std::atomic_uint32_t TCPClient::_uidFeed(1);
+
 TCPClient::TCPClient(const std::shared_ptr<Service>& service, const std::string& address, int port)
-    : _id(CppCommon::UUID::Sequential()),
+    : _id(_uidFeed.fetch_add(1)),
       _service(service),
       _io_service(_service->GetAsioService()),
       _strand(*_io_service),
@@ -39,7 +41,7 @@ TCPClient::TCPClient(const std::shared_ptr<Service>& service, const std::string&
 }
 
 TCPClient::TCPClient(const std::shared_ptr<Service>& service, const std::string& address, const std::string& scheme)
-    : _id(CppCommon::UUID::Sequential()),
+    : _id(_uidFeed.fetch_add(1)),
       _service(service),
       _io_service(_service->GetAsioService()),
       _strand(*_io_service),
@@ -67,7 +69,7 @@ TCPClient::TCPClient(const std::shared_ptr<Service>& service, const std::string&
 }
 
 TCPClient::TCPClient(const std::shared_ptr<Service>& service, const asio::ip::tcp::endpoint& endpoint)
-    : _id(CppCommon::UUID::Sequential()),
+    : _id(_uidFeed.fetch_add(1)),
       _service(service),
       _io_service(_service->GetAsioService()),
       _strand(*_io_service),
